@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			body {
+				overflow: hidden;
+			}
+			
+			.box {
+				position: absolute;
+				left: 0;
+				top: 0;
+				transition: .8s;
+			}
+			
+			.box div:nth-of-type(1) {
+				background: orange;
+			}
+			
+			.box div:nth-of-type(2) {
+				background: lawngreen;
+			}
+			
+			.box div:nth-of-type(3) {
+				background: gold;
+			}
+			
+			.box div:nth-of-type(4) {
+				background: lightblue;
+			}
+			
+			.box div:nth-of-type(5) {
+				background: orchid;
+			}
+			
+			.nav {
+				width: 20px;
+				position: fixed;
+				right: 10%;
+				top: 40%;
+			}
+			
+			.nav a {
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background: #fff;
+				float: left;
+				margin-bottom: 15px;
+			}
+			
+			.nav .active {
+				background: red;
+			}
+		</style>
+		<script src="js/mousewheel.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="box"></div>
+		<div class="nav"></div>
+	</body>
+
+</html>
+<script type="text/javascript">
+	function fullScreen() {
+		var oBox = document.getElementsByClassName("box")[0];
+		var oNav = document.getElementsByClassName("nav")[0];
+		var w = window.innerWidth;//每一屏的宽度
+		var h = window.innerHeight;//每一屏的高度
+		var num = 0;
+		var onOff = true;//给个开关，用于控制鼠标上下滑动多少次都只执行一次
+
+		addWheel(oBox, fnUp, fnDown);//滚轮函数调用
+		
+		
+		oBox.innerHTML = '';//先清空，后添加
+		oNav.innerHTML = '';
+		for(var i = 0; i < 5; i++) {//创建div和a标签
+			oBox.innerHTML += "<div></div>";
+			oNav.innerHTML += "<a href='javascript:;'></a>"
+		}
+		
+		
+		var divs = oBox.getElementsByTagName("div");//获取元素
+		var aA = oNav.getElementsByTagName("a");
+		
+		aA[0].className = "active";//给第一个a默认选中
+		
+		
+		for(var i = 0; i < divs.length; i++) {//设置div的宽高
+			divs[i].style.width = w + 'px';
+			divs[i].style.height = h + 'px';
+		}
+
+		for(var i = 0; i < aA.length; i++) {//所有的a标签绑定点击事件
+			aA[i].index = i;
+			aA[i].onclick = function() {
+				oBox.style.top = -this.index * h + 'px';//每一屏的距离等于当前下标*一屏的高度
+				num = -this.index;//把num重新赋值成点击完以后的值，防止出现问题
+				setBg();//设置a的背景
+			}
+		}
+
+		function fnUp() {
+			if(onOff) {
+				onOff = !onOff;
+				num++;
+				if(num >= 0) {
+					num = 0;
+				}
+				oBox.style.top = num * h + 'px';
+				setBg();
+				setTimeout(function() {
+					onOff = !onOff;
+				}, 800)
+			}
+		}
+
+		function fnDown() {
+			if(onOff) {
+				onOff = !onOff;
+				num--;
+				if(num < -divs.length + 1) {
+					num = -divs.length + 1;
+				}
+				oBox.style.top = num * h + 'px';
+				setBg();
+				setTimeout(function() {
+					onOff = !onOff;
+				}, 800)
+			}
+
+		}
+
+		function setBg() {
+			for(var i = 0; i < aA.length; i++) {
+				aA[i].className = ""
+			}
+			aA[Math.abs(num)].className = "active";
+		}
+	}
+
+	fullScreen();
+
+	window.onresize = function() {
+		fullScreen();
+	}
+</script>
