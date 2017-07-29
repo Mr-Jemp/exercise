@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			#box .active{
+				background: red;
+			}
+			#box div{
+				width: 300px;
+				height: 200px;
+				border: 1px solid #ccc;
+				display: none;
+			}
+			#box .show{
+				display: block;
+			}
+		</style>
+		<script src="js/jquery-3.2.1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/tab.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="box"></div>
+	</body>
+</html>
+<script type="text/javascript">
+	$('#box').tab({
+		header:['Σ(☉▽☉"a','(*╹▽╹*)','[○･｀Д´･ ○]'],
+		content:['可爱','调皮','生气'],
+	});
+</script>
