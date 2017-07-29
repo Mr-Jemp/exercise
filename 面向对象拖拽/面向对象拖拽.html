@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			div{
+				width:100px;
+				height:100px;
+				background-color: red;
+				position: absolute;
+				top:0;
+				left:0;
+				cursor: crosshair;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box" id="box"></div>
+	</body>
+</html>
+<script type="text/javascript">
+	//构造函数写属性
+	function Drag(id){
+		this.ele = document.getElementById(id);
+		var that = this;
+		this.x = null;
+		this.y = null;
+		this.ele.addEventListener("mousedown",function(ev){
+			that.down(ev,that);
+		});		
+	}
+	//鼠标按下
+	Drag.prototype.down = function(ev,that){
+		this.x = ev.pageX - this.ele.offsetLeft;
+		this.y = ev.pageY - this.ele.offsetTop;
+		
+		document.addEventListener("mousemove",fnMove);	
+		document.addEventListener("mouseup",fnUp);	
+		
+		function fnMove(ev){
+			that.move(ev);
+		}		
+		function fnUp(){
+			that.up(fnMove,fnUp);
+		}
+		ev.preventDefault();
+	}
+	//鼠标移动
+	Drag.prototype.move = function(ev){
+		var l = ev.pageX - this.x;
+		var t = ev.pageY - this.y;
+		
+		l = this.rang(0,window.innerWidth-this.ele.offsetWidth,l);
+		t = this.rang(0,window.innerHeight-this.ele.offsetHeight,t);
+		
+		this.ele.style.left = l + 'px';
+		this.ele.style.top = t + 'px';
+	}
+	//鼠标抬起 ，解绑
+	Drag.prototype.up = function(fnMove,fnUp){
+		document.removeEventListener("mousemove",fnMove);
+		document.removeEventListener("mouseup",fnUp);
+	}
+	
+	Drag.prototype.rang = function(min,max,now){
+		if(now<=min){
+			return min;
+		}else if(now>=max){
+			return max;
+		}else{
+			return now;
+		}
+	}
+	var t = new Drag("box");
+</script>
