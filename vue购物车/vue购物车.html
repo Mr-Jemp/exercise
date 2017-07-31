@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="container" id="app">
+			<h2 class="text-center">购物车</h2>
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th class="text-center">商品编号</th>
+							<th class="text-center">商品名称</th>
+							<th class="text-center">商品数量</th>
+							<th class="text-center">商品单价</th>
+							<th class="text-center">商品总价</th>
+							<th class="text-center">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="item,index in list" v-if="content">
+							<td class="text-center">{{item.id}}</td>
+							<td class="text-center">{{item.name}}</td>
+							<td class="text-center">
+								<button class="btn btn-primary" v-on:click="removeItem(index)">-</button>
+								<input type="text" v-model="item.count" />
+								<button class="btn btn-primary" v-on:click="addItem(index)">+</button>
+							</td>
+							<td class="text-center">{{item.price}}</td>
+							<td class="text-center">{{item.price | myFilter(item.count)}}</td>
+							<td class="text-center">
+								<button class="btn btn-danger" v-on:click="remove(index)">删除</button>
+							</td>
+						</tr>
+						<tr v-else>
+							<td colspan="6">
+								<h4>您的购物车没有商品！去商城逛逛吧(。・＿・。)ﾉI’m sorry~</h4>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2" class="text-left">商品总量：{{getAllCount}}</td>
+							<td colspan="2" class="text-left">商品总价：{{getGrossPrice}}</td>
+							<td colspan="2" class="text-left">
+								<button class="btn btn-danger" v-on:click="clearShop">清空购物车</button>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	var aData = [
+		{id:1001,name:"iphone8",count:3,price:8000,grossPrice:24000},
+		{id:2004,name:"vivoXplay9",count:5,price:6000,grossPrice:30000},
+		{id:3022,name:"iphone10",count:2,price:10000,grossPrice:20000},
+		{id:2017,name:"oppoR15",count:6,price:7000,grossPrice:42000},
+	];
+	
+	Vue.filter("myFilter",function(val1,val2){
+		return "¥" + val1 * val2;
+	})
+	
+	new Vue({
+		el:"#app",
+		data:{
+			list:aData,
+			content:true,
+		},
+		methods:{
+			removeItem(i){
+				if(this.list[i].count > 0){
+					this.list[i].count -= 1;
+				}
+			},
+			addItem(i){
+				this.list[i].count += 1;
+			},
+			remove(i){
+				this.list.splice(i,1);//经过响应数据处理，还有其他经过处理的方法pop()、unshift()、push()、shift()
+			},
+			clearShop(){
+				this.list = [];
+				this.content = false;
+			},
+		},
+		computed:{
+			getAllCount(){
+				var allCount = 0;
+				this.list.forEach(function(item){
+					allCount += item.count;
+				})
+				return allCount;
+			},
+			getGrossPrice(){
+				var grossPrice = 0;
+				this.list.forEach(function(item){
+					grossPrice += item.count*item.price;
+				})
+				return grossPrice;
+			}
+		}
+	})
+</script>
