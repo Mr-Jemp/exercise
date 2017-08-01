@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Title</title>
+	    <link rel="stylesheet" href="index.css">
+	    <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+	    
+	</head>
+	<body>
+		<div class="page-top">
+	        <div class="page-content">
+	            <h2>任务计划列表</h2>
+	        </div>
+	    </div>
+	    <div class="main" id="app">
+	        <h3 class="big-title">添加任务：</h3>
+	        <input  
+	        	class="task-input" 
+	        	type="text" 
+	        	placeholder="例如：吃饭睡觉打豆豆；    提示：+回车即可添加任务"
+	        	@keyup.13="addItem"
+	        	v-model="texting"
+	        />
+	        <ul class="task-count">
+	            <li>{{totalUnfinish}}个任务未完成</li>
+	            <li class="action">
+	                <a :class="{active:hash=='all'}" href="#all">所有任务</a>
+	                <a :class="{active:hash=='unfinish'}" href="#unfinish">未完成的任务</a>
+	                <a :class="{active:hash=='finish'}" href="#finish">完成的任务</a>
+	            </li>
+	        </ul>
+	        <h3 class="big-title">任务列表：</h3>
+	        <div class="tasks">
+	            <span class="no-task-tip" v-show="!list.length">还没有添加任何任务</span>
+	            <ul class="todo-list">
+	                <li v-for="(item,index) of filterList" :class="{completed:item.isCk,editing:item==now}">
+	                    <div class="view">
+	                        <input class="toggle" type="checkbox" v-model="item.isCk"/>
+	                        <label @dblclick="editingItem(item)">{{item.title}}</label>
+	                        <button class="destroy" @click="removeItem(index)"></button>
+	                    </div>
+	                    <input class="edit" type="text" 
+	                    	v-model="item.title"
+	                    	@keyup.13="editedItem"
+	                    	@blur="editedItem"
+	                    	v-focus="now == item"
+	                   	/>
+	                </li>
+	                
+	            </ul>
+	        </div>
+	    </div>
+	    
+	    <script src="index.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
