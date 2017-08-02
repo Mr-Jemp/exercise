@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#app{
+				width: 300px;
+				margin: 50px auto;
+			}
+			#app input{
+				margin-left: 25px;
+				background: none;
+				border: none;
+				outline: none;
+				cursor: pointer;
+				box-shadow: 0px 0px 10px #ccc;
+				color: #555;
+				padding: 3px 5px;
+			}
+			#app div{
+				margin-top: 20px;
+				width: 300px;
+				height: 100px;
+				line-height: 100px;
+				text-align: center;
+				box-shadow: 0px 0px 10px brown;
+			}
+			
+			.v-enter{
+				transform: translateX(-300px);
+				opacity: 0;
+			}
+			.v-enter-active{
+				transition: 1s;
+			}
+			.v-enter-to{
+				transform: translateX(0);
+				opacity: 1;
+			}
+			.v-leave{
+				transform: translateX(0);
+				opacity: 1;
+			}
+			.v-leave-active{
+				transition: .5s;
+			}
+			.v-leave-to{
+				transform: translateX(300px);
+				opacity: 0;
+			}
+		</style>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<input type="button" value="组件一" @click="changeItem(1)" />
+			<input type="button" value="组件二" @click="changeItem(2)" />
+			<input type="button" value="组件三" @click="changeItem(3)" />
+			
+			<transition mode="out-in">
+				<keep-alive>
+					<component :is="item"></component>
+				</keep-alive>
+			</transition>
+		</div>
+		<script type="text/javascript">
+			var item1 = Vue.component("item1",{
+				template:`
+					<div>我是组件一</div>
+				`
+			})
+			var item2 = Vue.component("item2",{
+				template:`
+					<div @click="changeBg">我是组件二</div>
+				`,
+				methods:{
+					changeBg(ev){
+						ev.target.style.background = "gold";
+					}
+				}
+			})
+			var item3 = Vue.component("item3",{
+				template:`
+					<div>我是组件三</div>
+				`
+			})
+			
+			
+			new Vue({
+				el:"#app",
+				data:{
+					item:item1
+				},
+				methods:{
+					changeItem(index){
+						if(index == 1){
+							this.item = item1;
+						}else if(index == 2){
+							this.item = item2;
+						}else if(index == 3){
+							this.item = item3;
+						}
+					}
+				}
+				
+			})
+			
+		</script>
+	</body>
+</html>
