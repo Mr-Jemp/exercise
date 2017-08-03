@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title></title>
+		<script src="vue.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			ul {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+			
+			.tree-menu {
+				width: 360px;
+				height: 100%;
+				padding: 0px 12px;
+				border-right: 1px solid #e6e9f0;
+			}
+			
+			.tree-menu-comm span {
+				display: block;
+				font-size: 12px;
+				position: relative;
+			}
+			
+			.tree-contro .ico {
+				background-position: 3px -92px;
+			}
+			
+			.tree-title .icoLeft {
+				position: absolute;
+				left: -18px;
+				transform: rotate(-90deg);
+				top: 6px;
+				width: 22px;
+				height: 13px;
+				background: url(bottom.png)no-repeat;
+				opacity: 0.8;
+				background-size: cover;
+			}
+			
+			.tree-title .icoDown {
+				transform: rotate(0deg);
+			}
+			
+			.tree-menu-comm span strong {
+				display: block;
+				width: 82%;
+				position: relative;
+				line-height: 22px;
+				padding: 2px 0;
+				padding-left: 5px;
+				color: #161719;
+				font-weight: normal;
+			}
+			
+			.tree-nav {
+				background: #e7f2fe;
+				border: 1px solid #bfdaf4;
+				padding-left: 14px;
+				margin-left: 0px;
+			}
+			
+			.tree-title {
+				border: 1px solid #fff;
+				margin-top: 1px;
+			}
+			/*无箭头*/
+			
+			.tree-contro-none .ico {
+				background-position: -999px -99px;
+			}
+			/*箭头朝下*/
+			
+			.tree-contro .ico {
+				background-position: 3px -92px;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<template id="my-template">
+			
+		</template>
+		
+		<div id="app">
+			<!--<div class="tree-menu-comm tree-menu">
+				<ul>
+					<li>
+						<div class="tree-title" style="padding-left: 16px;"><span><strong>目录</strong> <i class="icoLeft"></i></span></div>
+						<ul>
+							<li>
+								<div class="tree-title" style="padding-left: 32px;"><span><strong>我的音乐</strong> <i class="icoLeft"></i></span></div>
+								<ul>
+									<li>
+										<div class="tree-title" style="padding-left: 48px;"><span><strong>周杰伦</strong> <i class="icoLeft"></i></span></div>
+										<ul>
+											<li>
+												<div class="tree-title tree-contro-none" style="padding-left: 64px;"><span><strong>发如雪</strong> <i class="ico"></i></span></div>
+
+											</li>
+										</ul>
+									</li>
+									<li>
+										<div class="tree-title" style="padding-left: 48px;"><span><strong>王杰</strong> <i class="icoLeft"></i></span></div>
+										<ul>
+											<li>
+												<div class="tree-title tree-contro-none" style="padding-left: 64px;"><span><strong>一场游戏一场梦</strong> <i class="ico"></i></span></div>
+
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<div class="tree-title tree-contro-none" style="padding-left: 32px;"><span><strong>我的照片</strong> <i class="ico"></i></span></div>
+								
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>-->
+			
+			<my-tree :list="list"></my-tree>
+		</div>
+		<script>
+			var data = [
+				{
+					title: "目录",
+					chidren: [{
+						title: "我的音乐",
+						chidren: [{
+								title: "周杰伦",
+								chidren: [{
+									title: "发如雪"
+								}]
+							},
+							{
+								title: "王杰",
+								chidren: [{
+									title: "一场游戏一场梦"
+								}]
+							},
+							{
+								title: "张学友",
+								chidren: [{
+									title: "朋友"
+								}]
+							}
+						]
+					}]
+				},
+				{
+					title: "我的照片"
+				}
+			];
+			
+			
+			
+			Vue.component("my-child-tree",{
+				props:["list","count"],
+				data(){
+					return {
+						addCount:this.count,
+						who:'',
+						s:true
+					}
+				},
+				computed:{
+					all(){
+						var c = this.addCount + 1;
+						return c;
+					}
+				},
+				template:`
+					<ul>
+						<li v-for="item in list">
+							<div class="tree-title" :style="{paddingLeft: all*16 + 'px'}">
+								<span><strong>{{item.title}}</strong><i :class="{icoLeft:item.chidren}" @click="xy(item)"></i></span>
+							</div>
+							<my-child-tree v-if="item.chidren" :list="item.chidren" :count="all" v-show="!(item == who)||s"></my-child-tree>
+						</li>
+					</ul>
+				`,
+				methods:{
+					xy(item){
+						this.who = item;
+						this.s = !this.s;
+						return this.s
+					}
+				}
+				
+			})
+			
+			
+			Vue.component("my-tree",{
+				props:{
+					list:{
+						type:Array
+					},
+					count:{
+						type:Number,
+						default:0
+					}
+				},
+				template:`
+					<div class="tree-menu-comm tree-menu">
+						<my-child-tree :list="list" :count="count"></my-child-tree>
+					</div>
+				`,
+			})
+			
+			var vm = new Vue({
+				el:"#app",
+				data:{
+					list:data
+				}
+			})
+		</script>
+	</body>
+
+</html>
