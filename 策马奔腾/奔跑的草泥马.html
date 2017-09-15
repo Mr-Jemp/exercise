@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			html,body,div,img{
+				margin: 0;
+			}
+			div{
+				width: 200px;
+				height: 180px;
+				overflow: hidden;
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+			}
+			img{
+				position: absolute;
+				top: 0;
+				left: 0px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div>
+			<img src="img/maer.png" alt="" />
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	var Img = document.getElementsByTagName('img')[0];
+	setInterval(function(){
+		if(Img.offsetLeft < -1200){
+			 Img.style.left= 0;
+		}else{
+			Img.style.left = Img.offsetLeft - 240 + 'px';
+		}
+	},75)
+</script>
